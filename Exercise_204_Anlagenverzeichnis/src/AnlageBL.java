@@ -2,8 +2,8 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import static java.util.Locale.filter;
 import javax.swing.table.AbstractTableModel;
 
 /*
@@ -28,14 +28,16 @@ public class AnlageBL extends AbstractTableModel{
     
     public void load(File f){
         anlagenverzeichnis.clear();
+        LocalDate ld;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
             br.readLine();
             while ((line = br.readLine()) != null) {
 
                 try {
-     
-                    anlagenverzeichnis.add(new Anlage(line));
+                    
+                    String [] list = line.split(";");
+                    anlagenverzeichnis.add(new Anlage(Integer.parseInt(list[1]),Integer.parseInt(list[2]),Integer.parseInt(list[3]),list[0]));
 
                 } catch (Exception e) {
 
@@ -45,6 +47,10 @@ public class AnlageBL extends AbstractTableModel{
         } catch (Exception e) {
 
         }
+    }
+    
+    public void updateYear(String jahr){
+        
     }
     
     public double calcBisherigeNutzungsdauer(){
@@ -86,16 +92,15 @@ public class AnlageBL extends AbstractTableModel{
     public Object getValueAt(int rowIndex, int columnIndex) {
         Anlage a = anlagenverzeichnis.get(rowIndex);
         switch(columnIndex){
-            case 0: return ;
-            case 1: return ;
-            case 2: return ;
-            case 3: return ;
-            case 4: return ;
-            case 5: return ;
-            case 6: return ;
-            case 7: return ;
-            case 8: return ;
-            case 9: return ;
+            case 0: return ""+a.getName();
+            case 1: return ""+a.getAnschaffungswert();
+            case 2: return ""+a.getInbetriebnahme();
+            case 3: return ""+a.getNutzungsdauer();
+            case 4: return ""+calcBisherigeNutzungsdauer();
+            case 5: return ""+calcAfaBisher();
+            case 6: return ""+wertVorAfa();
+            case 7: return ""+afaNextYear();
+            case 8: return ""+calcBW();
             default: return "???";
         }
     }
