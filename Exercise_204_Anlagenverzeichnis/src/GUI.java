@@ -103,12 +103,13 @@ AnlageBL model = new AnlageBL();
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
-    model.updateYear(combobox.getSelectedItem().toString());
+    
     }//GEN-LAST:event_updateActionPerformed
 
     private void comboboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboboxActionPerformed
         String filter = combobox.getSelectedItem().toString();
-        model.filter();
+        model.updateYear(combobox.getSelectedItem().toString());
+        model.filter(filter);
     }//GEN-LAST:event_comboboxActionPerformed
 
     /**

@@ -20,6 +20,7 @@ public class AnlageBL extends AbstractTableModel{
     
     private String [] spaltennamen = {"Bezeichnung","AK","Inbetriebnahme","ND","bish. ND","Afa bisher","Wert vor Afa","Afa d. Jahres","BW 31.12."};
     private ArrayList<Anlage> anlagenverzeichnis = new ArrayList();
+    private ArrayList<Anlage> filter = new ArrayList();
     private int actualYear=2001;
     
     public void add(Anlage a){
@@ -41,7 +42,8 @@ public class AnlageBL extends AbstractTableModel{
                     String inbetriebnahme = list[2].replace(",", ".");
                     String nd = list[3].replace(",", ".");
                     anlagenverzeichnis.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
-
+                    filter.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
+                    
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
@@ -54,6 +56,16 @@ public class AnlageBL extends AbstractTableModel{
     
     public void updateYear(String jahr){
         actualYear=Integer.parseInt(jahr);
+        fireTableDataChanged();
+    }
+    
+    public void filter(String filterkriterium){
+        filter.clear();
+        for(int i = 0; i < anlagenverzeichnis.size();i++){
+            if(anlagenverzeichnis.get(i).getInbetriebnahme() <= Double.parseDouble(filterkriterium)){
+                filter.add(anlagenverzeichnis.get(i));
+            }
+        }
         fireTableDataChanged();
     }
     
@@ -80,7 +92,7 @@ public class AnlageBL extends AbstractTableModel{
 
     @Override
     public int getRowCount() {
-        return anlagenverzeichnis.size();
+        return filter.size();
     }
 
     @Override
@@ -95,7 +107,7 @@ public class AnlageBL extends AbstractTableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Anlage a = anlagenverzeichnis.get(rowIndex);
+        Anlage a = filter.get(rowIndex);
         switch(columnIndex){
             case 0: return ""+a.getName();
             case 1: return ""+a.getAnschaffungswert();
