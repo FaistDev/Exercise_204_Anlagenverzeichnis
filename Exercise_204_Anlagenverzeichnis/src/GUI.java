@@ -9,7 +9,7 @@
  * @author Ben
  */
 public class GUI extends javax.swing.JFrame {
-AnlagenBL model = new AnlagenBL();
+AnlageBL model = new AnlageBL();
 
     /**
      * Creates new form GUI
