@@ -117,7 +117,7 @@ public class AnlageBL extends AbstractTableModel{
             case 5: return String.format("%.2f",calcAfaBisher(rowIndex));
             case 6: return String.format("%.2f",wertVorAfa(rowIndex));
             case 7: return String.format("%.2f",afaThisYear(rowIndex));
-            case 8: return String.format("%.2f",calcBW(rowIndex));
+            case 8: return calcBW(rowIndex);
             default: return "???";
         }
     }

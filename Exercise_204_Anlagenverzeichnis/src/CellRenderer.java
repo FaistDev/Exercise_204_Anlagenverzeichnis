@@ -20,12 +20,19 @@ public class CellRenderer implements TableCellRenderer {
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        JLabel label = new JLabel((String) value);
+        JLabel label = new JLabel(""+ value);
         label.setBackground(Color.white);
         label.setOpaque(true);
         if (isSelected) {
             label.setBackground(Color.lightGray);
         }
+        
+        if( column == 8){
+            if((Double) value==0.0){
+                label.setBackground(Color.red);
+            }
+        }
+        
         return label;
     }
     

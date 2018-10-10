@@ -21,6 +21,7 @@ AnlageBL model = new AnlageBL();
         initComponents();
         jTable.setModel(model);
         model.load(new File("./anlagenverzeichnis.csv"));
+        jTable.setDefaultRenderer(Object.class,new CellRenderer());
     }
 
     /**
