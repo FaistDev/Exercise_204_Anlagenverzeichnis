@@ -20,6 +20,7 @@ public class AnlageBL extends AbstractTableModel{
     
     private String [] spaltennamen = {"Bezeichnung","AK","Inbetriebnahme","ND","bish. ND","Afa bisher","Wert vor Afa","Afa d. Jahres","BW 31.12."};
     private ArrayList<Anlage> anlagenverzeichnis = new ArrayList();
+    private int actualYear=2001;
     
     public void add(Anlage a){
         anlagenverzeichnis.add(a);
@@ -28,7 +29,6 @@ public class AnlageBL extends AbstractTableModel{
     
     public void load(File f){
         anlagenverzeichnis.clear();
-        LocalDate ld;
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {
             String line;
             br.readLine();
@@ -37,40 +37,45 @@ public class AnlageBL extends AbstractTableModel{
                 try {
                     
                     String [] list = line.split(";");
-                    anlagenverzeichnis.add(new Anlage(Integer.parseInt(list[1]),Integer.parseInt(list[2]),Integer.parseInt(list[3]),list[0]));
+                    String ak = list[1].replace(".", "");
+                    String inbetriebnahme = list[2].replace(",", ".");
+                    String nd = list[3].replace(",", ".");
+                    anlagenverzeichnis.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
 
                 } catch (Exception e) {
-
+                    System.out.println(e.getMessage());
                 }
             }
             fireTableRowsUpdated(0, 0);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
     }
     
     public void updateYear(String jahr){
-        
+        actualYear=Integer.parseInt(jahr);
+        fireTableDataChanged();
     }
     
-    public double calcBisherigeNutzungsdauer(){
-        return 0;
+    public double calcBisherigeNutzungsdauer(int rowIndex){
+        double bND=actualYear-anlagenverzeichnis.get(rowIndex).getInbetriebnahme();
+        return bND;
     }
     
-    public double calcAfaBisher(){
-        return 0;
+    public double calcAfaBisher(int rowIndex){
+        return (anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer())*this.calcBisherigeNutzungsdauer(rowIndex);
     }
     
-    public double wertVorAfa(){
-        return 0;
+    public double wertVorAfa(int rowIndex){
+        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()-this.calcAfaBisher(rowIndex);
     }
     
-    public double afaNextYear(){
-        return 0;
+    public double afaThisYear(int rowIndex){
+        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
     }
     
-    public double calcBW(){
-        return 0;
+    public double calcBW(int rowIndex){
+        return this.wertVorAfa(rowIndex)-this.afaThisYear(rowIndex);
     }
 
     @Override
@@ -96,11 +101,11 @@ public class AnlageBL extends AbstractTableModel{
             case 1: return ""+a.getAnschaffungswert();
             case 2: return ""+a.getInbetriebnahme();
             case 3: return ""+a.getNutzungsdauer();
-            case 4: return ""+calcBisherigeNutzungsdauer();
-            case 5: return ""+calcAfaBisher();
-            case 6: return ""+wertVorAfa();
-            case 7: return ""+afaNextYear();
-            case 8: return ""+calcBW();
+            case 4: return String.format("%.2f",calcBisherigeNutzungsdauer(rowIndex));
+            case 5: return String.format("%.2f",calcAfaBisher(rowIndex));
+            case 6: return String.format("%.2f",wertVorAfa(rowIndex));
+            case 7: return String.format("%.2f",afaThisYear(rowIndex));
+            case 8: return String.format("%.2f",calcBW(rowIndex));
             default: return "???";
         }
     }
