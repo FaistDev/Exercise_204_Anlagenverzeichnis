@@ -13,11 +13,11 @@ import java.time.LocalDate;
  */
 public class Anlage {
     private double anschaffungswert;
-    private LocalDate inbetriebnahme;
+    private double inbetriebnahme;
     private double nutzungsdauer;
     private String name;
 
-    public Anlage(double anschaffungswert, LocalDate inbetriebnahme, double nutzungsdauer, String name) {
+    public Anlage(double anschaffungswert, double inbetriebnahme, double nutzungsdauer, String name) {
         this.anschaffungswert = anschaffungswert;
         this.inbetriebnahme = inbetriebnahme;
         this.nutzungsdauer = nutzungsdauer;
@@ -28,7 +28,7 @@ public class Anlage {
         return anschaffungswert;
     }
 
-    public LocalDate getInbetriebnahme() {
+    public double getInbetriebnahme() {
         return inbetriebnahme;
     }
 
