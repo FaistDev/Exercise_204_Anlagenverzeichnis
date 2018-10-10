@@ -1,3 +1,6 @@
+
+import java.time.LocalDate;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,5 +12,33 @@
  * @author Ben
  */
 public class Anlage {
+    private double anschaffungswert;
+    private LocalDate inbetriebnahme;
+    private double nutzungsdauer;
+    private String name;
+
+    public Anlage(double anschaffungswert, LocalDate inbetriebnahme, double nutzungsdauer, String name) {
+        this.anschaffungswert = anschaffungswert;
+        this.inbetriebnahme = inbetriebnahme;
+        this.nutzungsdauer = nutzungsdauer;
+        this.name = name;
+    }
+
+    public double getAnschaffungswert() {
+        return anschaffungswert;
+    }
+
+    public LocalDate getInbetriebnahme() {
+        return inbetriebnahme;
+    }
+
+    public double getNutzungsdauer() {
+        return nutzungsdauer;
+    }
+
+    public String getName() {
+        return name;
+    }
     
+        
 }
