@@ -1,3 +1,6 @@
+
+import java.io.File;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -17,7 +20,7 @@ AnlageBL model = new AnlageBL();
     public GUI() {
         initComponents();
         jTable.setModel(model);
-        model.load();
+        model.load(new File("./anlagenverzeichnis.csv"));
     }
 
     /**
@@ -92,7 +95,7 @@ AnlageBL model = new AnlageBL();
     }// </editor-fold>//GEN-END:initComponents
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
-    model.updateYear(combobox.getSelectedItem());
+    //model.updateYear(combobox.getSelectedItem());
     }//GEN-LAST:event_updateActionPerformed
 
     /**
