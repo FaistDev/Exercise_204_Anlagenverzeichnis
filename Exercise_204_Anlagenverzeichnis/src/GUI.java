@@ -1,9 +1,5 @@
 
-<<<<<<< HEAD
 import java.io.File;
-=======
-
->>>>>>> origin/Marc
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,12 +20,7 @@ AnlageBL model = new AnlageBL();
     public GUI() {
         initComponents();
         jTable.setModel(model);
-<<<<<<< HEAD
         model.load(new File("./anlagenverzeichnis.csv"));
-=======
-        
-    
->>>>>>> origin/Marc
     }
 
     /**
