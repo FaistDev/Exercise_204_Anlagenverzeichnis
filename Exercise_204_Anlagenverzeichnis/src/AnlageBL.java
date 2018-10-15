@@ -20,8 +20,8 @@ public class AnlageBL extends AbstractTableModel{
     
     private String [] spaltennamen = {"Bezeichnung","AK","Inbetriebnahme","ND","bish. ND","Afa bisher","Wert vor Afa","Afa d. Jahres","BW 31.12."};
     private ArrayList<Anlage> anlagenverzeichnis = new ArrayList();
-    private ArrayList<Anlage> filter = new ArrayList();
-    private int actualYear=2001;
+    private ArrayList<Anlage> allData = new ArrayList();
+    private double actualYear=2001;
     
     public void add(Anlage a){
         anlagenverzeichnis.add(a);
@@ -42,7 +42,7 @@ public class AnlageBL extends AbstractTableModel{
                     String inbetriebnahme = list[2].replace(",", ".");
                     String nd = list[3].replace(",", ".");
                     anlagenverzeichnis.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
-                    filter.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
+                    allData.add(new Anlage(Double.parseDouble(ak),Double.parseDouble(inbetriebnahme),Double.parseDouble(nd),list[0]));
                     
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -55,27 +55,30 @@ public class AnlageBL extends AbstractTableModel{
     }
     
     public void updateYear(String jahr){
-        actualYear=Integer.parseInt(jahr);
+        actualYear=Double.parseDouble(jahr);
         fireTableDataChanged();
     }
     
     public void filter(String filterkriterium){
-        filter.clear();
-        for(int i = 0; i < anlagenverzeichnis.size();i++){
-            if(anlagenverzeichnis.get(i).getInbetriebnahme() <= Double.parseDouble(filterkriterium)){
-                filter.add(anlagenverzeichnis.get(i));
+        anlagenverzeichnis.clear();
+        for(int i = 0; i < allData.size();i++){
+            if(allData.get(i).getInbetriebnahme() <= Double.parseDouble(filterkriterium)+0.5){
+                anlagenverzeichnis.add(allData.get(i));
             }
         }
         fireTableDataChanged();
     }
     
     public double calcBisherigeNutzungsdauer(int rowIndex){
-        double bND=actualYear-anlagenverzeichnis.get(rowIndex).getInbetriebnahme();
+        double bND=actualYear-anlagenverzeichnis.get(rowIndex).getInbetriebnahme()+1;
+        if(bND>=anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
+            return anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
+        }
         return bND;
     }
     
     public double calcAfaBisher(int rowIndex){
-        return (anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer())*this.calcBisherigeNutzungsdauer(rowIndex);
+        return (anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer())*(this.calcBisherigeNutzungsdauer(rowIndex)-1);
     }
     
     public double wertVorAfa(int rowIndex){
@@ -83,6 +86,9 @@ public class AnlageBL extends AbstractTableModel{
     }
     
     public double afaThisYear(int rowIndex){
+        if(calcBisherigeNutzungsdauer(rowIndex)>=anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
+            return 0.0;
+        }
         return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
     }
     
@@ -92,7 +98,7 @@ public class AnlageBL extends AbstractTableModel{
 
     @Override
     public int getRowCount() {
-        return filter.size();
+        return anlagenverzeichnis.size();
     }
 
     @Override
@@ -107,7 +113,7 @@ public class AnlageBL extends AbstractTableModel{
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        Anlage a = filter.get(rowIndex);
+        Anlage a = anlagenverzeichnis.get(rowIndex);
         switch(columnIndex){
             case 0: return ""+a.getName();
             case 1: return ""+a.getAnschaffungswert();
