@@ -70,7 +70,10 @@ public class AnlageBL extends AbstractTableModel{
     }
     
     public double calcBisherigeNutzungsdauer(int rowIndex){
-        double bND=actualYear-anlagenverzeichnis.get(rowIndex).getInbetriebnahme()+1;
+        double bND=actualYear-anlagenverzeichnis.get(rowIndex).getInbetriebnahme();
+        if(bND<0.0){
+            return 0.0;
+        }
         if(bND>=anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
             return anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
         }
@@ -78,7 +81,7 @@ public class AnlageBL extends AbstractTableModel{
     }
     
     public double calcAfaBisher(int rowIndex){
-        return (anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer())*(this.calcBisherigeNutzungsdauer(rowIndex)-1);
+        return (anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer())*(this.calcBisherigeNutzungsdauer(rowIndex));
     }
     
     public double wertVorAfa(int rowIndex){
@@ -89,7 +92,7 @@ public class AnlageBL extends AbstractTableModel{
         if(calcBisherigeNutzungsdauer(rowIndex)>=anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
             return 0.0;
         }
-        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
+        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer()*(anlagenverzeichnis.get(rowIndex).getInbetriebnahme()%1==0 ? 1 : 0.5);
     }
     
     public double calcBW(int rowIndex){
