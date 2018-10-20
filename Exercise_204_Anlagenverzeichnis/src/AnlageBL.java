@@ -92,7 +92,14 @@ public class AnlageBL extends AbstractTableModel{
         if(calcBisherigeNutzungsdauer(rowIndex)>=anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
             return 0.0;
         }
-        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer()*(anlagenverzeichnis.get(rowIndex).getInbetriebnahme()%1==0 ? 1 : 0.5);
+        if(actualYear+0.5==anlagenverzeichnis.get(rowIndex).getInbetriebnahme()){
+            return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer()/2;
+        }
+        if(actualYear+0.5==anlagenverzeichnis.get(rowIndex).getInbetriebnahme()+anlagenverzeichnis.get(rowIndex).getNutzungsdauer()){
+            return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer()/2;
+        }
+        //if(anlagenverzeichnis.get(rowIndex).getInbetriebnahme()%1!=0 && actualYear==)
+        return anlagenverzeichnis.get(rowIndex).getAnschaffungswert()/anlagenverzeichnis.get(rowIndex).getNutzungsdauer();
     }
     
     public double calcBW(int rowIndex){
